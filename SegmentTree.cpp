@@ -10,7 +10,7 @@ struct segment_tree{
 	segment_tree(int _n, T _neutral, T _lazy_neutral, const function<T(const T&, const T&)> &_merge, const function<T(const T&, const T&)> &_upd, bool _range_modif)
 	{
 		range_modif = _range_modif;
-		init(_n, neutral, lazy_neutral, _merge, _upd);
+		init(_n, _neutral, _lazy_neutral, _merge, _upd);
 	}
 	segment_tree(vector<T> _a, T _neutral, T _lazy_neutral, const function<T(const T&, const T&)> &_merge, const function<T(const T&, const T&)> &_upd, bool _range_modif)
 	{
