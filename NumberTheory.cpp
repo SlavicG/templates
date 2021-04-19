@@ -14,6 +14,14 @@ namespace number_theory
 		a %= mod, b %= mod;
 		return (a + b) % mod;
 	}
+	template <typename T, typename C, typename D> 
+	T add(T a, C b, D m)
+	{
+		assert(a >= 0 && b >= 0);
+		a %= m, b %= m;
+		return (a + b) % m;
+	}
+
 	template <typename T, typename C> 
 	T sub(T a, C b)
 	{
@@ -21,6 +29,14 @@ namespace number_theory
 		a %= mod, b %= mod;
 		return (a - b + mod) % mod;
 	}
+	template <typename T, typename C, typename D> 
+	T sub(T a, C b, D m)
+	{
+		assert(a >= 0 && b >= 0);
+		a %= m, b %= m;
+		return (a - b + m) % m;
+	}
+
 	template <typename T, typename C> 
 	T mul(T a, C b)
 	{
@@ -28,6 +44,14 @@ namespace number_theory
 		a %= mod, b %= mod;
 		return (a * b) % mod;
 	}
+	template <typename T, typename C, typename D> 
+	T mul(T a, C b, D m)
+	{
+		assert(a >= 0 && b >= 0);
+		a %= m, b %= m;
+		return (a * b) % m;
+	}
+
 	template <typename T, typename C> 
 	T pw(T a, C b)
 	{
@@ -40,6 +64,19 @@ namespace number_theory
 		}
 		return r;
 	}
+	template <typename T, typename C, typename D> 
+	T pw(T a, C b, D m)
+	{
+		T r = 1;
+		a %= m;
+		while(b){
+			if(b&1)r = mul(r, a, m);
+			a = mul(a,a, m);
+			b >>= 1;
+		}
+		return r;
+	}
+
 	template <typename T> 
 	T inv(T a)
 	{
@@ -103,7 +140,20 @@ namespace number_theory
 		}
 		return true;
 	}
-
+	bool is_prime_large(unsigned ll n)
+	{
+		if (n < 2 || n % 6 % 4 != 1) return (n | 1) == 3;
+		unsigned ll A[] = {2, 325, 9375, 28178, 450775, 9780504, 1795265022},
+		    s = __builtin_ctzll(n-1), d = n >> s;
+		for (unsigned ll a : A)
+		{
+			unsigned ll p = pw(a%n, d, n), i = s;
+			while (p != 1 && p != n - 1 && a % n && i--)
+				p = mul(p, p, n);
+			if (p != n - 1 && i != s)return 0;
+		}
+		return 1;
+	}
 	void sieve(int n)
 	{
 		lp.assign(n + 4, 0);
