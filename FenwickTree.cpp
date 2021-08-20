@@ -1,36 +1,17 @@
-struct fenwick_tree {
-    vector<ll> fen;
-    int n;
+template<typename T, bool zero_indexing>
+struct fenwick_tree{
+    int N;
+    vector<T> fen;
     fenwick_tree(int n){
-        this->n = n;
-        fen.assign(n, 0);
+        N = n, fen.assign(n + 1, 0);
     }
-
-    template<typename T>
-    fenwick_tree(vector<T> a){
-    	this->n = sz(a);
-    	fen.assign(n, 0);
-        for (size_t i = 0; i < sz(a); i++)
-            modif(i, a[i]);
+    void modif(int p, T val){
+        for(int i = p + zero_indexing;i <= N;i += i & -i)fen[i] += val;
     }
-    ll query(int r){
-        ll ret = 0;
-        while(r >= 0){
-        	ret += fen[r];
-        	r = (r & (r + 1)) - 1;
-        }
+    T query(int l, int r){
+        T ret = 0;
+        for(int i = r + zero_indexing;i;i -= i & -i)ret += fen[i];
+        for(int i = l-1+zero_indexing;i;i-=i&-i)ret -= fen[i];
         return ret;
-    }
-    ll query(int l, int r) {
-    	ll ret = query(r);
-    	if(l)ret -= query(l - 1);
-        return ret;
-    }
-    void modif(int idx, int val){
-    	while(idx < n)
-    	{
-    		fen[idx] += val;
-    		idx = idx | (idx + 1);
-    	}
     }
 };
